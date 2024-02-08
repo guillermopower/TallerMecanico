@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "3333ad93-7dd2-453d-b389-dcd5f53791c5",
+		"name": "TallerMecanico",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "5806685"
+	},
+	"item": [
+		{
+			"name": "DescuentosYRecargos/SaveOrUpdate",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\r\n  \"descripcion\": \"Costos de estacionamiento\",\r\n  \"valorAbsoluto\": null,\r\n  \"valorPorcentual\": 10.00,\r\n  \"esValorAbsoluto\": false,\r\n  \"activo\": true,\r\n  \"fechaInicio\": \"2024-02-07T04:54:48.043Z\",\r\n  \"fechaFin\": \"3024-02-07T04:54:48.043Z\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:7263/api/v1.0/DescuentosRecargos/SaveOrUpdate"
+			},
+			"response": []
+		},
+		{
+			"name": "Vehiculos/Ingreso",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"marca\": \"VW\",\r\n  \"modelo\": \"GOL POWER\",\r\n  \"patente\": \"LUC704\",\r\n  \"tipo\": 1,\r\n  \"cantidadPuertas\": \"2024-02-07T15:15:49.334Z\",\r\n  \"esMoto\": false,\r\n  \"cilindrada\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://localhost:7263/api/v1.0/Vehiculos/Ingreso"
+			},
+			"response": []
+		},
+		{
+			"name": "DescuentosYRecargos/getall",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://localhost:7263/api/v1.0/DescuentosRecargos/getall"
+			},
+			"response": []
+		}
+	]
+}
