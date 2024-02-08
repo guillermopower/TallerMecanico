@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TallerMecanico.Business", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TallerMecanico.Common", "TallerMecanico.Common\TallerMecanico.Common.csproj", "{F257C374-89BF-4000-9E74-EF5632093C43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TallerMecanico.API", "TallerMecanico.API\TallerMecanico.API.csproj", "{A646884F-23C1-40E7-80AB-C40B741685E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TallerMecanico.API", "TallerMecanico.API\TallerMecanico.API.csproj", "{A646884F-23C1-40E7-80AB-C40B741685E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
