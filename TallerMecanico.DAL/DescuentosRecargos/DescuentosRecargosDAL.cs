@@ -1,43 +1,41 @@
-﻿using TallerMecanico.DAL.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TallerMecanico.DAL.Models;
 
 namespace TallerMecanico.DAL.DescuentosRecargos
 {
-    public class DescuentosRecargosDAL: IDescuentosRecargosDAL
+    public class DescuentosRecargosDAL : IDescuentosRecargosDAL
     {
-        public List<DescuentosRecargo> GetAll(bool soloActivos = false)
+        public async Task<List<DescuentosRecargo>> GetAll(bool soloActivos = false)
         {
-            var lista = new List<DescuentosRecargo>();
             using (var context = new TallerMecanicoContext())
             {
-                if(soloActivos)
-                    lista = context.DescuentosRecargos.Where(x=>x.Activo.Equals(true)).ToList();
+                if (soloActivos)
+                    return await context.DescuentosRecargos.Where(x => x.Activo.Equals(true)).ToListAsync();
                 else
-                    lista = context.DescuentosRecargos.ToList();
+                    return await context.DescuentosRecargos.ToListAsync();
             }
-
-            return lista;
         }
 
-        public DescuentosRecargo Get(long id)
+        public async Task<DescuentosRecargo> Get(long id)
         {
-            var item = new DescuentosRecargo();
             using (var context = new TallerMecanicoContext())
             {
-                item = context.DescuentosRecargos.FirstOrDefault(x => x.Id.Equals(id));
+                return await context.DescuentosRecargos.FirstOrDefaultAsync(x => x.Id.Equals(id));
             }
-
-            return item;
         }
-        public long SaveOrUpdate(DescuentosRecargo item)
+
+        public async Task<long> SaveOrUpdate(DescuentosRecargo item)
         {
-            long id = 0;
             using (var context = new TallerMecanicoContext())
             {
-                if (item.Id.Equals(0)) context.DescuentosRecargos.Add(item); else context.DescuentosRecargos.Update(item);
-                context.SaveChanges();
-                id = item.Id;
+                if (item.Id.Equals(0))
+                    await context.DescuentosRecargos.AddAsync(item);
+                else
+                    context.DescuentosRecargos.Update(item);
+
+                await context.SaveChangesAsync();
+                return item.Id;
             }
-            return id;
         }
     }
 }

@@ -4,8 +4,8 @@ namespace TallerMecanico.DAL.DescuentosRecargos
 {
     public interface IDescuentosRecargosDAL
     {
-        public List<DescuentosRecargo> GetAll(bool soloActivos = false);
-        public DescuentosRecargo Get(long id);
-        public long SaveOrUpdate(DescuentosRecargo item);
+        public Task<List<DescuentosRecargo>> GetAll(bool soloActivos = false);
+        public Task<DescuentosRecargo> Get(long id);
+        public Task<long> SaveOrUpdate(DescuentosRecargo item);
     }
 }

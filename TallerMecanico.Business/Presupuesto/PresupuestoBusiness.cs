@@ -8,51 +8,54 @@ using TallerMecanico.DAL.Repuesto;
 
 namespace TallerMecanico.Business.Presupuesto
 {
-    public class PresupuestoBusiness: IPresupuestoBusiness
+    public class PresupuestoBusiness : IPresupuestoBusiness
     {
-        private readonly IPresupuestoDAL presupuestoDAL;
-        private readonly IDescuentosRecargosDAL descuentosRecargosDAL;
-        private readonly IDesperfectosRepuestoDAL desperfectosRepuestoDAL;
-        private readonly IRepuestoDAL repuestoDAL;
-        private readonly IDesperfectoDAL desperfectoDAL;
+        private readonly IPresupuestoDAL _presupuestoDAL;
+        private readonly IDescuentosRecargosDAL _descuentosRecargosDAL;
+        private readonly IDesperfectosRepuestoDAL _desperfectosRepuestoDAL;
+        private readonly IRepuestoDAL _repuestoDAL;
+        private readonly IDesperfectoDAL _desperfectoDAL;
+
         public PresupuestoBusiness(IPresupuestoDAL presupuestoDAL, IDescuentosRecargosDAL descuentosRecargosDAL,
             IRepuestoDAL repuestoDAL, IDesperfectoDAL desperfectoDAL, IDesperfectosRepuestoDAL desperfectosRepuestoDAL)
         {
-            this.presupuestoDAL = presupuestoDAL;
-            this.descuentosRecargosDAL = descuentosRecargosDAL;
-            this.repuestoDAL= repuestoDAL;
-            this.desperfectoDAL = desperfectoDAL;
-            this.desperfectosRepuestoDAL = desperfectosRepuestoDAL;
+            _presupuestoDAL = presupuestoDAL;
+            _descuentosRecargosDAL = descuentosRecargosDAL;
+            _repuestoDAL = repuestoDAL;
+            _desperfectoDAL = desperfectoDAL;
+            _desperfectosRepuestoDAL = desperfectosRepuestoDAL;
         }
 
         public async Task<decimal?> CalcularTotal(long idPresupuesto)
         {
-            decimal? total = 0;
-            decimal? manoDeObra = 0;
-            decimal? repuestos = 0;
+            decimal manoDeObra = 0;
+            decimal repuestos = 0;
 
-            var listaDesperfectos = desperfectoDAL.GetByPresupuestoId(idPresupuesto);
-            listaDesperfectos.ForEach(x => {
-                manoDeObra += x.ManoDeObra;
-                var listaRepuestos = desperfectosRepuestoDAL.GetMany(x.Id);
-            });
-
-            var ListaDetalleDesperfectos = desperfectosRepuestoDAL.GetMany(idPresupuesto);
-            ListaDetalleDesperfectos.ForEach(x => {
-                repuestos += repuestoDAL.Get(x.IdRepuesto).Precio;
-                
-            });
-
-            total = + manoDeObra + repuestos;
-
-            var descuentos = descuentosRecargosDAL.GetAll(true);
-
-
-            descuentos.ForEach(x =>
+            var listaDesperfectos = await _desperfectoDAL.GetByPresupuestoId(idPresupuesto);
+            foreach (var desperfecto in listaDesperfectos)
             {
-                if (x.EsValorAbsoluto) total += x.ValorAbsoluto;
-                else total += ((decimal)(total) * (x.ValorPorcentual / 100));
-            });
+                manoDeObra += desperfecto.ManoDeObra ?? 0;
+                var listaRepuestos = await _desperfectosRepuestoDAL.GetMany(desperfecto.Id);
+                foreach (var repuesto in listaRepuestos)
+                {
+                    repuestos += (await _repuestoDAL.Get(repuesto.IdRepuesto)).Precio ?? 0;
+                }
+            }
+
+            decimal total = manoDeObra + repuestos;
+
+            var descuentos = await _descuentosRecargosDAL.GetAll();
+            foreach (var descuento in descuentos)
+            {
+                if (descuento.EsValorAbsoluto)
+                {
+                    total += descuento.ValorAbsoluto ?? 0;
+                }
+                else
+                {
+                    total += total * (descuento.ValorPorcentual ?? 0) / 100;
+                }
+            }
 
             return total;
         }
@@ -60,20 +63,16 @@ namespace TallerMecanico.Business.Presupuesto
         public async Task<long> AddOrUpdate(TallerMecanico.Entities.Models.Presupuesto model)
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Entities.Models.Presupuesto, DAL.Models.Presupuesto>());
-            var _mapper = config.CreateMapper();
-            var presupuesto = _mapper.Map<DAL.Models.Presupuesto>(model);
+            var mapper = config.CreateMapper();
+            var presupuesto = mapper.Map<DAL.Models.Presupuesto>(model);
 
-            presupuesto.Total = (decimal) await CalcularTotal(presupuesto.Id);
-            var res = await presupuestoDAL.AddOrUpdate(presupuesto);
-            return res;
+            presupuesto.Total = await CalcularTotal(presupuesto.Id) ?? 0;
+            return await _presupuestoDAL.AddOrUpdate(presupuesto);
         }
 
         public async Task<DAL.Models.Presupuesto> Get(long idPresupuesto)
         {
-            DAL.Models.Presupuesto item = new DAL.Models.Presupuesto();
-            item = await presupuestoDAL.Get(idPresupuesto);
-            return item;
-
+            return await _presupuestoDAL.Get(idPresupuesto);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace TallerMecanico.DAL.Repuesto
 {
     public class RepuestoDAL:IRepuestoDAL
     {
-        public long Add(Models.Repuesto repuesto)
+        public async Task<long> Add(Models.Repuesto repuesto)
         {
             long id = 0;
             using (var context = new TallerMecanicoContext())
@@ -18,7 +18,7 @@ namespace TallerMecanico.DAL.Repuesto
             return id;
         }
 
-        public long Update(Models.Repuesto repuesto)
+        public async Task<long> Update(Models.Repuesto repuesto)
         {
             long id = 0;
             using (var context = new TallerMecanicoContext())
@@ -32,7 +32,7 @@ namespace TallerMecanico.DAL.Repuesto
             return id;
         }
 
-        public Models.Repuesto Get(long id)
+        public async Task<Models.Repuesto> Get(long id)
         {
             var item = new Models.Repuesto();
             using (var context = new TallerMecanicoContext())
@@ -43,7 +43,7 @@ namespace TallerMecanico.DAL.Repuesto
             return item;
         }
 
-        public List<Models.Repuesto> GetAll()
+        public async Task<List<Models.Repuesto>> GetAll()
         {
             var lista = new List<Models.Repuesto>();
             using (var context = new TallerMecanicoContext())
