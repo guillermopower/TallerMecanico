@@ -1,9 +1,10 @@
-﻿using TallerMecanico.DAL.DesperfectosRepuesto;
+﻿using Microsoft.EntityFrameworkCore;
+using TallerMecanico.DAL.DesperfectosRepuesto;
 using TallerMecanico.DAL.Models;
 
 namespace TallerMecanico.DAL.DesperfectosRepuestosRepuesto
 {
-    public class DesperfectosRepuestoDAL: IDesperfectosRepuestoDAL
+    public class DesperfectosRepuestoDAL : IDesperfectosRepuestoDAL
     {
         public long Add(Models.DesperfectosRepuesto desperfectosRepuesto)
         {
@@ -33,23 +34,23 @@ namespace TallerMecanico.DAL.DesperfectosRepuestosRepuesto
             return id;
         }
 
-        public List<Models.DesperfectosRepuesto> GetMany(long idDesperfecto)
+        public async Task<List<Models.DesperfectosRepuesto>> GetMany(long idDesperfecto)
         {
             var lista = new List<Models.DesperfectosRepuesto>();
             using (var context = new TallerMecanicoContext())
             {
-                lista = context.DesperfectosRepuestos.Where(x=>x.IdDesperfecto.Equals(idDesperfecto)).ToList();
+                lista = await context.DesperfectosRepuestos.Where(x => x.IdDesperfecto.Equals(idDesperfecto)).ToListAsync();
             }
 
             return lista;
         }
 
-        public List<Models.DesperfectosRepuesto> GetAll()
+        public async Task<List<Models.DesperfectosRepuesto>> GetAll()
         {
             var lista = new List<Models.DesperfectosRepuesto>();
             using (var context = new TallerMecanicoContext())
             {
-                lista = context.DesperfectosRepuestos.ToList();
+                lista = await context.DesperfectosRepuestos.ToListAsync();
             }
 
             return lista;
