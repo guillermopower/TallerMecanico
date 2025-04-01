@@ -13,15 +13,15 @@ namespace TallerMecanico.Business.DescuentosRecargos
 
         public async Task<List<DescuentosRecargo>> GetAll(bool soloActivos = false)
         {
-            return descuentosRecargosDAL.GetAll(soloActivos);
+            return await descuentosRecargosDAL.GetAll(soloActivos);
         }
         public async Task<DescuentosRecargo>Get(long id)
         {
-            return descuentosRecargosDAL.Get(id);
+            return await descuentosRecargosDAL.Get(id);
         }
         public async Task<long> SaveOrUpdate(DescuentosRecargo item)
         {
-            return descuentosRecargosDAL.SaveOrUpdate(item);
+            return await descuentosRecargosDAL.SaveOrUpdate(item);
         }
     }
 }
